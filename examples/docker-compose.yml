@@ -1,0 +1,47 @@
+# Creates a Drupal web app with MySQL database
+# Usage: docker-compose up -d
+version: '2'
+services:
+  drupal:
+    image: drupal:8.1.1-apache
+    container_name: drupal_8081
+    volumes:
+      - /var/www/html
+      #- /usr/local/bin/drush:/drush/drush
+    volumes_from:
+      - drush_volumed
+    ports:
+      - '8081:80'
+    links:
+      - mysql
+      - phpmyadmin
+      - mailcatcher
+      #- drupalconsole
+  mysql:
+    image: mysql:5.5
+    container_name: mysql
+    # volumes:
+    #   - /var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=drupal
+      - MYSQL_USER=drupal
+      - MYSQL_PASSWORD=drupal
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_8090
+    environment:
+      - PMA_ARBITRARY=1
+    ports:
+      - '8090:80'
+    links:
+      - mysql
+  mailcatcher:
+    image: schickling/mailcatcher
+    container_name: mailcatcher_1080
+    ports:
+      - '1080:1080'
+  drush_volumed:
+    image: drush-volumed
+    container_name: drush_volumed
+
