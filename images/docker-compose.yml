@@ -10,13 +10,13 @@ services:
       #- /usr/local/bin/drush:/drush/drush
     volumes_from:
       - drush_volumed
+      - drupalconsole_volumed
     ports:
       - '8081:80'
     links:
       - mysql
       - phpmyadmin
       - mailcatcher
-      #- drupalconsole
   mysql:
     image: mysql:5.5
     container_name: mysql
@@ -44,4 +44,10 @@ services:
   drush_volumed:
     image: drush-volumed
     container_name: drush_volumed
-
+    links:
+      - mysql
+  drupalconsole_volumed:
+    image: drupalconsole-volumed:1.0.0-alpha2
+    container_name: drupalconsole_volumed
+    # links:
+    #   - mysql

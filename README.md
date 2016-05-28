@@ -1,3 +1,25 @@
+# Using Drupal 8.x with Docker
+
+## Clone this repo
+
+```
+git clone git@github.com:theodorosploumis/drupal-docker.git
+cd drupal-docker
+```
+
+## Build the images
+
+```
+docker build --build-arg CONSOLE_VERSION=1.0.0-alpha2 -t drupalconsole-volumed:1.0.0-alpha2 images/drupalconsole-volumed/.
+docker build --build-arg DRUSH_VERSION=8.1.2 -t drush-volumed:8.1.2 images/drush-volumed/.
+```
+
+## Create the containers with docker-compose
+
+```
+docker-compose up
+```
+
 ## Prepare a Drupal site for installation
 
 ```
@@ -12,7 +34,7 @@ docker exec drupal_8081 \
             chmod 644 sites/default/default.services.yml && \
 ```
 
-## Drupal console requirements
+## Fix drupalconsole requirements
 
 ```
 # Remove error message for Drupal console (php7)
@@ -23,7 +45,7 @@ docker exec drupal_8081 /drupalconsole/drupal \
 docker exec drupal_8081 /drupalconsole/drupal init
 ```
 
-# Install with Drupal console
+## Install with Drupal console
 
 ```
 docker exec drupal_8081 /drush/drush \
@@ -36,7 +58,7 @@ docker exec drupal_8081 /drush/drush \
     --account-mail=admin@example.com
 ```
 
-# Install with Drush
+## Install with Drush
 
 ```
 docker exec drupal_8081 /drupalconsole/drupal \
