@@ -1,11 +1,15 @@
-FROM drush/drush:8
+#docker build --build-arg DRUSH_VERSION=8.1.2 -t drush-volumed:8.1.2 .
+FROM radial/busyboxplus:curl
 
-# Move drush to a more generic path so it can be used with any image
-RUN mkdir -p /drush && \
-    mv -f /usr/local/bin/drush /drush/drush
+MAINTAINER Theodoros Ploumis <me@theodorosploumis.com>
 
-# Volume the drush path so we can use it with other containers
-VOLUME /drush
+ARG DRUSH_VERSION
 
-# Change the entrypoint to match the new drush path
+RUN mkdir -p /drush
+
+WORKDIR /drush
+
+RUN curl -L -o drush https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar && \
+    chmod +x /drush/drush
+
 ENTRYPOINT ["/drush/drush", "status"]
