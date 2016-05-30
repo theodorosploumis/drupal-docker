@@ -10,11 +10,14 @@ cd drupal-docker
 ## Build the images
 
 ```
-docker build --build-arg CONSOLE_VERSION=1.0.0-alpha2 -t drupalconsole-volumed:1.0.0-alpha2 images/drupalconsole-volumed/.
-docker build --build-arg DRUSH_VERSION=8.1.2 -t drush-volumed:8.1.2 images/drush-volumed/.
+# Build drupalconsole image with version 1.0.0-alpha2
+docker build --build-arg CONSOLE_VERSION=1.0.0-alpha2 -t drupalconsole-volumed:1.0.0-alpha2 builds/drupalconsole-volumed/.
+
+# Build drush image with version 8.1.1
+docker build --build-arg DRUSH_VERSION=8.1.2 -t drush-volumed:8.1.2 builds/drush-volumed/.
 ```
 
-## Create the containers with docker-compose
+## Run the containers with docker-compose
 
 ```
 docker-compose up
@@ -37,11 +40,12 @@ docker exec drupal_8081 \
 ## Fix drupalconsole requirements
 
 ```
-# Remove error message for Drupal console (php7)
+# After running the containers
+# Fix error message for Drupal console (php7 has no mysql extension)
 docker exec drupal_8081 /drupalconsole/drupal \
             settings:set checked "true"
 
-# Init drupal console (after building the container)
+# Init Drupal console
 docker exec drupal_8081 /drupalconsole/drupal init
 ```
 
