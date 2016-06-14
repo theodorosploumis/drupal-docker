@@ -78,3 +78,7 @@ docker exec drupal_8081 /drupalconsole/drupal \
             --account-pass=admin \
             --account-mail=admin@example.com
 ```
+
+## Similar projects
+
+- [runeasgar/docker_drupal_stack](https://github.com/runeasgar/docker_drupal_stack)
