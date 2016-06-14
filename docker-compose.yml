@@ -3,7 +3,7 @@
 version: '2'
 services:
   drupal:
-    image: drupal:8.1.1-apache
+    image: drupal:8.1.2-apache
     container_name: drupal_8081
     volumes:
       - /var/www/html
@@ -42,11 +42,17 @@ services:
     ports:
       - '1080:1080'
   drush_volumed:
-    image: drush-volumed
+    build: ./builds/drush-volumed
+    environment:
+      - DRUSH_VERSION=8.1.2
+    image: drush-volumed:8.1.2
     container_name: drush_volumed
     links:
       - mysql
   drupalconsole_volumed:
+    build: ./builds/drupalconsole-volumed
+    environment:
+      - CONSOLE_VERSION=1.0.0-alpha2
     image: drupalconsole-volumed:1.0.0-alpha2
     container_name: drupalconsole_volumed
     # links:
