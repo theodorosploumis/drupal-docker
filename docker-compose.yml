@@ -7,6 +7,7 @@ services:
     container_name: drupal_8081
     volumes:
       - /var/www/html
+      - ./scripts/php.ini:/usr/local/etc/php/php.ini
       #- /usr/local/bin/drush:/drush/drush
     volumes_from:
       - drush_volumed
@@ -20,6 +21,7 @@ services:
   mysql:
     image: mysql:5.5
     container_name: mysql
+    hostname: localhost
     # volumes:
     #   - /var/lib/mysql
     environment:
@@ -39,8 +41,11 @@ services:
   mailcatcher:
     image: schickling/mailcatcher
     container_name: mailcatcher_1080
+    hostname: mailcatcher
     ports:
       - '1080:1080'
+    #volumes:
+    #  - /usr/local/bundle/bin/mailcatcher
   drush_volumed:
     build: ./builds/drush-volumed
     environment:
