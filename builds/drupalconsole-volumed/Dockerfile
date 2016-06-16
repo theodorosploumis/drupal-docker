@@ -14,4 +14,4 @@ RUN curl -L -o drupal https://github.com/hechoendrupal/DrupalConsole/releases/do
 
 VOLUME /drupal
 
-#CMD ["/drupal/drupal"]
+ENTRYPOINT ["/drupal/drupal"]

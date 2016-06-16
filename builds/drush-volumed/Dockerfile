@@ -14,4 +14,4 @@ RUN curl -L -o drush https://github.com/drush-ops/drush/releases/download/${DRUS
 
 VOLUME /drush
 
-#CMD ["/drush/drush"]
+ENTRYPOINT ["/drush/drush"]

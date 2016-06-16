@@ -19,7 +19,8 @@ services:
       - drush_volumed
       - drupalconsole_volumed
     ports:
-      - '8081:80'
+      - "8081:80"
+      - "25"
     links:
       - mysql
       - phpmyadmin
@@ -49,7 +50,8 @@ services:
     container_name: mailhog_8025
     hostname: mailhog
     ports:
-      - '8025:8025'
+      - "8025:8025"
+      - "1025"
   drush_volumed:
     build:
       context: ./builds/drush-volumed
@@ -61,6 +63,6 @@ services:
     build:
       context: ./builds/drupalconsole-volumed
       args:
-        - CONSOLE_VERSION=1.0.0-alpha2
-    image: drupalconsole-volumed:1.0.0-alpha2
+        - CONSOLE_VERSION=1.0.0-beta2
+    image: drupalconsole-volumed:1.0.0-beta2
     container_name: drupalconsole_volumed
