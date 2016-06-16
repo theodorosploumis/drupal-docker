@@ -5,13 +5,13 @@ MAINTAINER Theodoros Ploumis <me@theodorosploumis.com>
 
 ARG CONSOLE_VERSION
 
-RUN mkdir -p /drupalconsole
+RUN mkdir /drupal
 
-WORKDIR /drupalconsole
+WORKDIR /drupal
 
 RUN curl -L -o drupal https://github.com/hechoendrupal/DrupalConsole/releases/download/${CONSOLE_VERSION}/drupal.phar && \
-    chmod +x /drupalconsole/drupal
+    chmod +x /drupal/drupal
 
-VOLUME /drupalconsole
+VOLUME /drupal
 
-ENTRYPOINT ["/drupalconsole/drupal"]
+#CMD ["/drupal/drupal"]

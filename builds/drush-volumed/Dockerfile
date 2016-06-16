@@ -5,11 +5,13 @@ MAINTAINER Theodoros Ploumis <me@theodorosploumis.com>
 
 ARG DRUSH_VERSION
 
-RUN mkdir -p /drush
+RUN mkdir /drush
 
 WORKDIR /drush
 
 RUN curl -L -o drush https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar && \
     chmod +x /drush/drush
 
-ENTRYPOINT ["/drush/drush", "status"]
+VOLUME /drush
+
+#CMD ["/drush/drush"]

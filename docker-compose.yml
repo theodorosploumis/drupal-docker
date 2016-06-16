@@ -8,7 +8,13 @@ services:
     volumes:
       - /var/www/html
       - ./scripts/php.ini:/usr/local/etc/php/php.ini
-      #- /usr/local/bin/drush:/drush/drush
+      - ./scripts:/scripts
+      #- ./modules/:/var/www/html/modules
+      #- ./themes/:/var/www/html/themes
+      #- ./libraries/:/var/www/html/libraries
+      #- ./profiles/:/var/www/html/profiles
+      #- $(which drush):/usr/local/bin/drush
+      #- $(which drupal):/usr/local/bin/drupal
     volumes_from:
       - drush_volumed
       - drupalconsole_volumed
@@ -17,13 +23,13 @@ services:
     links:
       - mysql
       - phpmyadmin
-      - mailcatcher
+      - mailhog
   mysql:
     image: mysql:5.5
     container_name: mysql
     hostname: localhost
     # volumes:
-    #   - /var/lib/mysql
+    #   - ./mysql:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=drupal
@@ -38,27 +44,23 @@ services:
       - '8090:80'
     links:
       - mysql
-  mailcatcher:
-    image: schickling/mailcatcher
-    container_name: mailcatcher_1080
-    hostname: mailcatcher
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog_8025
+    hostname: mailhog
     ports:
-      - '1080:1080'
-    #volumes:
-    #  - /usr/local/bundle/bin/mailcatcher
+      - '8025:8025'
   drush_volumed:
-    build: ./builds/drush-volumed
-    environment:
-      - DRUSH_VERSION=8.1.2
+    build:
+      context: ./builds/drush-volumed
+      args:
+        - DRUSH_VERSION=8.1.2
     image: drush-volumed:8.1.2
     container_name: drush_volumed
-    links:
-      - mysql
   drupalconsole_volumed:
-    build: ./builds/drupalconsole-volumed
-    environment:
-      - CONSOLE_VERSION=1.0.0-alpha2
+    build:
+      context: ./builds/drupalconsole-volumed
+      args:
+        - CONSOLE_VERSION=1.0.0-alpha2
     image: drupalconsole-volumed:1.0.0-alpha2
     container_name: drupalconsole_volumed
-    # links:
-    #   - mysql

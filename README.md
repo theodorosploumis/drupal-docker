@@ -1,60 +1,66 @@
 # Using Drupal 8.x with Docker
 
-## Clone this repo
+## 1. Clone this repo
 
 ```
 git clone git@github.com:theodorosploumis/drupal-docker.git
 cd drupal-docker
 ```
 
-## Build the images
+## Start the containers with docker-compose
+
+Notice that containers *drupalconsole_volumed* and *drush_volumed*
+will exit immetiately after starting as they are volumed
+containers used just to for their executables (drush and console accordingly).
+
+Also, they cannot be used separately only as linked containers.
 
 ```
-# Build drupalconsole image with version 1.0.0-alpha2
-docker build --build-arg CONSOLE_VERSION=1.0.0-alpha2 -t drupalconsole-volumed:1.0.0-alpha2 builds/drupalconsole-volumed/.
+// If you want to build the images before running the containers do:
+// docker-compose build
 
-# Build drush image with version 8.1.1
-docker build --build-arg DRUSH_VERSION=8.1.2 -t drush-volumed:8.1.2 builds/drush-volumed/.
-```
-
-## Run the containers with docker-compose
-
-```
 docker-compose up
 ```
 
-## Prepare a Drupal site for installation
+## 2. Prepare Drupal site for installation
 
 ```
-# Assuming your WORKDIR is set to drupal root
-docker exec drupal_8081 \
+// You can run the prepare-install.sh script
+docker exec drupal_8081 bash /scripts/prepare-install.sh
+
+// Or manually
+docker exec drupal_8081 sh -c "\
             cp sites/default/default.settings.php sites/default/settings.php && \
             chmod 777 sites/default/settings.php && \
             mkdir sites/default/files && \
             chown -R www-data:www-data sites/default && \
             chmod -R 777 sites/default/files && \
             chmod 644 sites/default/default.settings.php && \
-            chmod 644 sites/default/default.services.yml && \
+            chmod 644 sites/default/default.services.yml"
 ```
 
-## Fix drupalconsole requirements
+## Init drupal console and fix requirements
+
 
 ```
-# After running the containers
-# Fix error message for Drupal console (php7 has no mysql extension)
-docker exec drupal_8081 /drupalconsole/drupal \
-            settings:set checked "true"
-
-# Init Drupal console
-docker exec drupal_8081 /drupalconsole/drupal init
+// After running the containers
+docker exec drupal_8081 sh -c "\
+            /drupal/drupal init && \
+            /drupal/drupal settings:set checked 'true'"
 ```
 
-## Install with Drupal console
+## 3.1 Install with Drush
 
 ```
+// You can run the drush-install.sh script
+docker exec drupal_8081 bash /scripts/drush-install.sh
+
+// Or manually
+set DRUPAL_PROFILE=standard
+
 docker exec drupal_8081 /drush/drush \
     site-install -y ${DRUPAL_PROFILE} \
-    --site-name="Drupal 8 in Docker" \
+    --site-name="Drupal 8 with Docker - Drush" \
     --db-url=mysql://drupal:drupal@mysql/drupal \
     --site-mail=admin@example.com \
     --account-name=admin \
@@ -62,17 +68,28 @@ docker exec drupal_8081 /drush/drush \
     --account-mail=admin@example.com
 ```
 
-## Install with Drush
+Or...
+
+## 3.2 Install with Drupal console
 
 ```
-docker exec drupal_8081 /drupalconsole/drupal \
+// You can run the console-install.sh script
+docker exec drupal_8081 bash /scripts/console-install.sh
+
+// Or manually
+set DRUPAL_PROFILE=standard
+
+docker exec drupal_8081 /drupal/drupal \
             site:install -y ${DRUPAL_PROFILE} \
             --langcode=en \
+            --db-type=mysql \
+            --db-prefix='' \
+            --db-port=3306 \
             --db-host=mysql \
             --db-name=drupal \
             --db-user=drupal \
             --db-pass=drupal \
-            --site-name="Drupal 8 in Docker" \
+            --site-name="Drupal 8 with Docker - Console" \
             --site-mail=admin@example.com \
             --account-name=admin \
             --account-pass=admin \
