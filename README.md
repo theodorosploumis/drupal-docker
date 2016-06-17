@@ -1,28 +1,29 @@
 # Using Drupal 8.x with Docker
 
-## 1. Clone this repo
+### 1. Clone this repo
 
 ```
 git clone git@github.com:theodorosploumis/drupal-docker.git
 cd drupal-docker
 ```
 
-## Start the containers with docker-compose
-
-Notice that containers *drupalconsole_volumed* and *drush_volumed*
-will exit immetiately after starting as they are volumed
-containers used just to for their executables (drush and console accordingly).
-
-Also, they cannot be used separately only as linked containers.
+### 2. Start the containers with docker-compose
 
 ```
-// If you want to build the images before running the containers do:
+// If you want to build the images before running the containers run:
 // docker-compose build
 
-docker-compose up
+docker-compose up -d
 ```
 
-## 2. Prepare Drupal site for installation
+Notice that containers **drupalconsole_volumed** and **drush_volumed**
+will exit immetiately after starting as they are volumed
+containers. These containers are used just to mount their executables (drush and console accordingly).
+
+For the same reason they cannot be used separately but only as linked containers (they need php though).
+
+
+### 3. Prepare Drupal site for installation
 
 ```
 // You can run the prepare-install.sh script
@@ -39,17 +40,7 @@ docker exec drupal_8081 sh -c "\
             chmod 644 sites/default/default.services.yml"
 ```
 
-## Init drupal console and fix requirements
-
-
-```
-// After running the containers
-docker exec drupal_8081 sh -c "\
-            /drupal/drupal init && \
-            /drupal/drupal settings:set checked 'true'"
-```
-
-## 3.1 Install with Drush
+### 4.1 Install with Drush
 
 ```
 // You can run the drush-install.sh script
@@ -70,9 +61,15 @@ docker exec drupal_8081 /drush/drush \
 
 Or...
 
-## 3.2 Install with Drupal console
+### 4.2 Install with Drupal console
+
 
 ```
+// Init drupal console and fix requirements
+docker exec drupal_8081 sh -c "\
+            /drupal/drupal init && \
+            /drupal/drupal settings:set checked 'true'"
+
 // You can run the console-install.sh script
 docker exec drupal_8081 bash /scripts/console-install.sh
 
