@@ -27,10 +27,10 @@ For the same reason they cannot be used separately but only as linked containers
 
 ```
 // You can run the prepare-install.sh script
-docker exec drupal_8081 bash /scripts/prepare-install.sh
+docker exec drupal_8082 bash /scripts/prepare-install.sh
 
 // Or manually
-docker exec drupal_8081 sh -c "\
+docker exec drupal_8082 sh -c "\
             cp sites/default/default.settings.php sites/default/settings.php && \
             chmod 777 sites/default/settings.php && \
             mkdir sites/default/files && \
@@ -44,12 +44,12 @@ docker exec drupal_8081 sh -c "\
 
 ```
 // You can run the drush-install.sh script
-docker exec drupal_8081 bash /scripts/drush-install.sh
+docker exec drupal_8082 bash /scripts/drush-install.sh
 
 // Or manually
 set DRUPAL_PROFILE=standard
 
-docker exec drupal_8081 /drush/drush \
+docker exec drupal_8082 drush \
     site-install -y ${DRUPAL_PROFILE} \
     --site-name="Drupal 8 with Docker - Drush" \
     --db-url=mysql://drupal:drupal@mysql/drupal \
@@ -66,17 +66,17 @@ Or...
 
 ```
 // Init drupal console and fix requirements
-docker exec drupal_8081 sh -c "\
-            /drupal/drupal init && \
-            /drupal/drupal settings:set checked 'true'"
+docker exec drupal_8082 sh -c "\
+            drupal init && \
+            drupal settings:set checked 'true'"
 
 // You can run the console-install.sh script
-docker exec drupal_8081 bash /scripts/console-install.sh
+docker exec drupal_8082 bash /scripts/console-install.sh
 
 // Or manually
 set DRUPAL_PROFILE=standard
 
-docker exec drupal_8081 /drupal/drupal \
+docker exec drupal_8082 drupal \
             site:install -y ${DRUPAL_PROFILE} \
             --langcode=en \
             --db-type=mysql \

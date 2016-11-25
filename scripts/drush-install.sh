@@ -8,7 +8,7 @@ fi
 
 DRUPAL_PROFILE=standard
 
-/drush/drush site-install -y ${DRUPAL_PROFILE} \
+drush site-install -y ${DRUPAL_PROFILE} \
   --site-name="Drupal 8 with Docker - Drush" \
   --db-url=mysql://drupal:drupal@mysql/drupal \
   --site-mail=admin@example.com \

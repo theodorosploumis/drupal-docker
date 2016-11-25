@@ -8,7 +8,7 @@ fi
 
 DRUPAL_PROFILE=standard
 
-/drupal/drupal site:install -y ${DRUPAL_PROFILE} \
+drupal site:install -y ${DRUPAL_PROFILE} \
   --langcode=en \
   --db-type=mysql \
   --db-prefix='' \

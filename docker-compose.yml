@@ -1,13 +1,15 @@
-# Creates a Drupal web app with MySQL database
+# Creates multiple Drupal web apps sharing the same MySQL database
 # Usage: docker-compose up -d
 version: '2'
 services:
   drupal:
+    build:
+      context: ./builds/drupal-apache
     image: drupal:8.2.3-apache
-    container_name: drupal_8081
     volumes:
       - /var/www/html
       - ./scripts/php.ini:/usr/local/etc/php/php.ini
+      - ./scripts/settings.php:/var/www/html/sites/default/settings.php
       - ./scripts:/scripts
       #- ./modules/:/var/www/html/modules
       #- ./themes/:/var/www/html/themes
@@ -16,21 +18,29 @@ services:
       #- $(which drush):/usr/local/bin/drush
       #- $(which drupal):/usr/local/bin/drupal
     volumes_from:
-      - drush_volumed
-      - drupalconsole_volumed
+      - mysql
     ports:
-      - "8081:80"
-      - "25"
+      - "8082:80"
     links:
       - mysql
       - phpmyadmin
-      - mailhog
+    container_name: drupal_8082
+  drupal_slave:
+    image: drupal:8.2.3-apache
+    volumes_from:
+      - drupal
+      - mysql
+    ports:
+      - "80"
+    links:
+      - mysql
   mysql:
     image: mysql:8
     container_name: mysql
     hostname: localhost
-    # volumes:
-    #   - ./mysql:/var/lib/mysql
+    volumes:
+      - /var/lib/mysql
+      - /usr/bin
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=drupal
@@ -45,24 +55,3 @@ services:
       - '8090:80'
     links:
       - mysql
-  mailhog:
-    image: mailhog/mailhog
-    container_name: mailhog_8025
-    hostname: mailhog
-    ports:
-      - "8025:8025"
-      - "1025"
-  drush_volumed:
-    build:
-      context: ./builds/drush-volumed
-      args:
-        - DRUSH_VERSION=8.1.2
-    image: drush-volumed:8.1.2
-    container_name: drush_volumed
-  drupalconsole_volumed:
-    build:
-      context: ./builds/drupalconsole-volumed
-      args:
-        - CONSOLE_VERSION=1.0.0-rc10
-    image: drupalconsole-volumed:1.0.0-rc10
-    container_name: drupalconsole_volumed
