@@ -9,7 +9,7 @@ services:
     volumes:
       - /var/www/html
       - ./scripts/php.ini:/usr/local/etc/php/php.ini
-      - ./scripts/settings.php:/var/www/html/sites/default/settings.php
+      #- ./scripts/settings.php:/var/www/html/sites/default/settings.php
       - ./scripts:/scripts
       #- ./modules/:/var/www/html/modules
       #- ./themes/:/var/www/html/themes
